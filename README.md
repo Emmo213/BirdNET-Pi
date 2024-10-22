@@ -1,10 +1,10 @@
-<h1 align="center"><a href="https://github.com/mcguirepr89/BirdNET-Pi/blob/main/LICENSE">Review the license!!</a></h1>
-<h1 align="center">You may not use BirdNET-Pi to develop a commercial product!!!!</h1>
+<h1 align="center">You may not use BirdNET-Pi to develop a commercial product!<br>
+<a href="https://github.com/mcguirepr89/BirdNET-Pi/blob/main/LICENSE">Review the license!</a></h1>
 <h1 align="center">
   BirdNET-Pi
 </h1>
 <p align="center">
-A realtime acoustic bird classification system for the Raspberry Pi 5, 4B, 400, 3B+, and 0W2
+A realtime acoustic bird classification system for the Raspberry Pi
 </p>
 <p align="center">
   <img src="https://user-images.githubusercontent.com/60325264/140656397-bf76bad4-f110-467c-897d-992ff0f96476.png" />
@@ -14,73 +14,15 @@ Icon made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from 
 </p>
 
 ## About this fork:
-This is a fork from [Nachtzuster](https://github.com/Nachtzuster/BirdNET-Pi), who has been building from the original BirdNET-Pi. So far I've opened pull requests for all of my changes to Nachtzuster's repo also, but incase they don't get approved I'm putting them here. 
+This is a fork from [Nachtzuster](https://github.com/Nachtzuster/BirdNET-Pi), who has been building from the original BirdNET-Pi by [mcguirepr89](https://github.com/mcguirepr89/BirdNET-Pi), plus some bug fixes and enhancements of my own which haven't been included in his repo.
 
-Nachtzuster has been building on [mcguirepr89's](https://github.com/mcguirepr89/BirdNET-Pi) most excellent work to further update and improve BirdNET-Pi. Maybe someone will find it useful.
-
-Changes include:
-
- - Web ui is much more responsive
- - Daily charts now include all species, not just top/bottom 10
- - Bump apprise version, so more notification type are possible
- - Swipe events on Daily Charts (by @croisez)
- - Support for 'Species range model V2.4 - V2'
- - Bookworm support
- - Experimental support for writing transient files to tmpfs
- - Rework analysis to consolidate analysis/server/extraction. Should make analysis more robust and slightly more efficient, especially on installations with a large number of recordings
- - Bump tflite_runtime to 2.11.0, it is faster
- - Rework daily_plot.py (chart_viewer) to run as a daemon to avoid the very expensive startup
- - Lots of fixes & cleanups
-
-!! note: see 'Migrating' on how to migrate from mcguirepr89
+Note: see 'Migrating' on how to migrate from mcguirepr89's version
 
 ## Introduction
-BirdNET-Pi is built on the [BirdNET framework](https://github.com/kahst/BirdNET-Analyzer) by [**@kahst**](https://github.com/kahst) <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"></a> using [pre-built TFLite binaries](https://github.com/PINTO0309/TensorflowLite-bin) by [**@PINTO0309**](https://github.com/PINTO0309) . It is able to recognize bird sounds from a USB microphone or sound card in realtime and share its data with the rest of the world.
+BirdNET-Pi is built on the [BirdNET framework](https://github.com/kahst/BirdNET-Analyzer) by [**@kahst**](https://github.com/kahst) <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg"></a> using [pre-built TFLite binaries](https://github.com/PINTO0309/TensorflowLite-bin) by [**@PINTO0309**](https://github.com/PINTO0309). It is able to recognize bird sounds from a USB microphone or sound card in realtime and share its data with the rest of the world.
 
 Check out birds from around the world
 - [BirdWeather](https://app.birdweather.com)<br>
-
-Currently listening in these countries . . . that I know of . . .
-- The United States
-- Germany
-- South Africa
-- France
-- Austria
-- Sweden
-- Scotland
-- Norway
-- England
-- Italy
-- Finland
-- Australia
-- Canada
-- Switzerland
-- Romania
-- Spain
-- New Zealand
-- Russia
-- Croatia
-- Belgium
-- Israel
-- Ireland
-- Denmark
-- Costa Rica
-- The Philippines
-- Hungary
-- South Sudan
-- Argentina
-- Brazil
-- Thailand
-- Colombia
-- Estonia
-- Tasmania
-- Luxembourg
-- Crete
-- Rwanda
-- Oman
-- Belarus
-- Czech Republic
-- Japan
 
 ## Features
 * **24/7 recording and automatic identification** of bird songs, chirps, and peeps using BirdNET machine learning
@@ -161,7 +103,7 @@ Having trouble or have an idea? *Submit an issue for trouble* and a *discussion 
 PLEASE search the repo for your issue before creating a new one. This repo has nothing to do with the validity of the detection results, so please do not start any issues around "False positives."
 
 ## Sharing
-Please join a Discussion!! and please join [BirdWeather!!](https://app.birdweather.com)
+Please join a discussion and please join [BirdWeather](https://app.birdweather.com)!
 I hope that if you find BirdNET-Pi has been worth your time, you will share your setup, results, customizations, etc. [HERE](https://github.com/mcguirepr89/BirdNET-Pi/discussions/69) and will consider [making your installation public](https://github.com/mcguirepr89/BirdNET-Pi/wiki/Sharing-Your-BirdNET-Pi).
 
 ## Homeassistant addon
@@ -181,38 +123,6 @@ For more information : https://github.com/alexbelgium/hassio-addons/blob/master/
 
 ### Internationalization:
 The bird names are in English by default, but other localized versions are available thanks to the wonderful efforts of [@patlevin](https://github.com/patlevin). Use the web interface's "Tools" > "Settings" and select your "Database Language" to have the detections in your language.
-
-Current database languages include the list below:
-| Language | Missing Species out of 6,362 | Missing labels (%) |
-| -------- | ------- | ------ |
-| Afrikaans | 5774 | 90.76% |
-| Catalan | 544 | 8.55% |
-| Chinese | 264 | 4.15% |
-| Croatian | 370 | 5.82% |
-| Czech | 683 | 10.74% |
-| Danish | 460 | 7.23% |
-| Dutch | 264 | 4.15% |
-| Estonian | 3171 | 49.84% |
-| Finnish | 518 | 8.14% |
-| French | 264 | 4.15% |
-| German | 264 | 4.15% |
-| Hungarian | 2688 | 42.25% |
-| Icelandic | 5588 | 87.83% |
-| Indonesian | 5550 | 87.24% |
-| Italian | 524 | 8.24% |
-| Japanese | 640 | 10.06% |
-| Latvian | 4821 | 75.78% |
-| Lithuanian | 597 | 9.38% |
-| Norwegian | 325 | 5.11% |
-| Polish | 265 | 4.17% |
-| Portuguese | 2742 | 43.10% |
-| Russian | 808 | 12.70% |
-| Slovak | 264 | 4.15% |
-| Slovenian | 5532 | 86.95% |
-| Spanish | 348 | 5.47% |
-| Swedish | 264 | 4.15% |
-| Thai | 5580 | 87.71% |
-| Ukrainian | 646 | 10.15% |
 
 ## Screenshots
 ![Overview](docs/overview.png)
