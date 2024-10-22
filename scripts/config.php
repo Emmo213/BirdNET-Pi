@@ -216,22 +216,18 @@ if(isset($_GET['sendtest']) && $_GET['sendtest'] == "true") {
     $time = $todaytable['Time'];
   }
 
-  $test_file = fopen($config["RECS_DIR"]."/"."StreamData"."/"."send_test_notification.txt", "w") or die("Unable to open file!");
- 
-  fwrite($test_file, "1.0".PHP_EOL);
-  fwrite($test_file, "3.0".PHP_EOL);
-  fwrite($test_file, $confidence.PHP_EOL);
-  fwrite($test_file, $sciname."_".$comname.PHP_EOL);
-  fwrite($test_file, $filename.PHP_EOL);
-  fwrite($test_file, $date."-birdnet-".$time.PHP_EOL);
-  fwrite($test_file, $_GET['apprise_notification_title'].PHP_EOL);
-  fwrite($test_file, $_GET['apprise_notification_body'].PHP_EOL);
-  fclose($test_file);
+
+  $title = base64_encode($_GET['apprise_notification_title']);
+  $body = base64_encode($_GET['apprise_notification_body']);
+  $command = "sudo -u $user ".$home."/BirdNET-Pi/birdnet/bin/python3 ".$home."/BirdNET-Pi/scripts/test_notification.py --confidence $confidence --name '".$sciname."_".$comname."' --filename $filename --date $date-birdnet-$time --body $body --title $title 2>&1 1>\dev\null";
 
   $apprise_test_config = fopen($home."/BirdNET-Pi/apprise_test.txt", "w") or die("Unable to open file!");
   fwrite($apprise_test_config, $_GET['apprise_config']);
   fclose($apprise_test_config);
 
+  $output = shell_exec($command);
+  #echo $output;
+  
   die();
 }
 

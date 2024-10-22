@@ -138,6 +138,8 @@ if(isset($_GET['bydate'])){
   $_SESSION['date'] = $date;
   if(isset($_GET['sort']) && $_GET['sort'] == "occurrences") {
     $statement = $db->prepare("SELECT DISTINCT(Com_Name) FROM detections WHERE Date == \"$date\" GROUP BY Com_Name ORDER BY COUNT(*) DESC");
+  } elseif(isset($_GET['sort']) && $_GET['sort'] == "confidence") {
+    $statement = $db->prepare("SELECT Com_Name, Sci_Name, MAX(Confidence) as MaxConfidence FROM detections WHERE Date == \"$date\" GROUP BY Com_Name ORDER BY MaxConfidence DESC");
   } else {
     $statement = $db->prepare("SELECT DISTINCT(Com_Name) FROM detections WHERE Date == \"$date\" ORDER BY Com_Name");
   }
@@ -149,6 +151,8 @@ if(isset($_GET['bydate'])){
 } elseif(isset($_GET['byspecies'])) {
   if(isset($_GET['sort']) && $_GET['sort'] == "occurrences") {
     $statement = $db->prepare('SELECT DISTINCT(Com_Name) FROM detections GROUP BY Com_Name ORDER BY COUNT(*) DESC');
+  } elseif(isset($_GET['sort']) && $_GET['sort'] == "confidence") {
+    $statement = $db->prepare('SELECT Com_Name, Sci_Name, MAX(Confidence) as MaxConfidence FROM detections GROUP BY Com_Name ORDER BY MaxConfidence DESC');
   } else {
     $statement = $db->prepare('SELECT DISTINCT(Com_Name) FROM detections ORDER BY Com_Name ASC');
   } 
@@ -410,6 +414,9 @@ if(!isset($_GET['species']) && !isset($_GET['filename'])){
       <button <?php if(isset($_GET['sort']) && $_GET['sort'] == "occurrences"){ echo "class='sortbutton active'";} else { echo "class='sortbutton'"; }?> type="submit" name="sort" value="occurrences">
          <img src="images/sort_occ.svg" title="Sort by occurrences" alt="Sort by occurrences">
       </button>
+      <button <?php if(isset($_GET['sort']) && $_GET['sort'] == "confidence"){ echo "class='sortbutton active'";} else { echo "class='sortbutton'"; }?> type="submit" name="sort" value="confidence">
+         <img src="images/sort_conf.svg" title="Sort by confidence" alt="Sort by confidence">
+      </button>
    </form>
 </div>
 <br>
@@ -429,10 +436,14 @@ if(!isset($_GET['species']) && !isset($_GET['filename'])){
           #By Species
   } elseif($view == "byspecies") {
     $birds = array();
+    $confidence = array();
     while($results=$result->fetchArray(SQLITE3_ASSOC))
     {
       $name = $results['Com_Name'];
       $birds[] = $name;
+      if ($_GET['sort'] == "confidence") {
+          $confidence[] = ' (' . round($results['MaxConfidence'] * 100) . '%)';
+      }
     }
 
     if(count($birds) > 45) {
@@ -451,7 +462,7 @@ if(!isset($_GET['species']) && !isset($_GET['filename'])){
         if ($index < count($birds)) {
           ?>
           <td class="spec">
-              <button type="submit" name="species" value="<?php echo $birds[$index];?>"><?php echo $birds[$index];?></button>
+              <button type="submit" name="species" value="<?php echo $birds[$index];?>"><?php echo $birds[$index].$confidence[$index];?></button>
           </td>
           <?php
         } else {
@@ -463,12 +474,16 @@ if(!isset($_GET['species']) && !isset($_GET['filename'])){
     }
   } elseif($view == "date") {
     $birds = array();
+    $confidence = array();
 while($results=$result->fetchArray(SQLITE3_ASSOC))
 {
   $name = $results['Com_Name'];
   $dir_name = str_replace("'", '', $name);
   if(realpath($home."/BirdSongs/Extracted/By_Date/".$date."/".str_replace(" ", "_", $dir_name)) !== false){
     $birds[] = $name;
+    if ($_GET['sort'] == "confidence") {
+	    $confidence[] = ' (' . round($results['MaxConfidence'] * 100) . '%)';
+    }
   }
 }
 
@@ -488,7 +503,7 @@ for ($row = 0; $row < $num_rows; $row++) {
     if ($index < count($birds)) {
       ?>
       <td class="spec">
-          <button type="submit" name="species" value="<?php echo $birds[$index];?>"><?php echo $birds[$index];?></button>
+          <button type="submit" name="species" value="<?php echo $birds[$index];?>"><?php echo $birds[$index].$confidence[$index];?></button>
       </td>
       <?php
     } else {
@@ -523,8 +538,12 @@ if(isset($_GET['species'])){ ?>
       <button <?php if(isset($_GET['sort']) && $_GET['sort'] == "confidence"){ echo "class='sortbutton active'";} else { echo "class='sortbutton'"; }?> type="submit" name="sort" value="confidence">
          <img src="images/sort_occ.svg" title="Sort by confidence" alt="Sort by confidence">
       </button><br>
-      <input style="margin-top:10px" <?php if(isset($_GET['only_excluded'])){ echo "checked"; }?> type="checkbox" name="only_excluded" onChange="submit()">
-      <label for="onlyverified">Only Show Purge Excluded</label>
+      <label style="cursor: pointer; margin-top: 10px; margin-bottom: 10px;font-weight: normal; display: inline-flex; align-items: center; justify-content: center;">
+        <input type="checkbox" name="only_excluded" <?= isset($_GET['only_excluded']) ? 'checked' : '' ?> onchange="submit()" style="display:none;">
+        <span style="width: 40px; height: 20px; background: <?= isset($_GET['only_excluded']) ? '#555555' : 'rgba(85, 85, 85, 0.3)' ?>; border: 1px solid #777777; border-radius: 20px; display: inline-block; position: relative; margin-right: 8px; transition: background 0.4s, border 0.4s; box-sizing: border-box;">
+        <span style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 1.5px; left: 2px; transition: 0.4s; display: flex; align-items: center; justify-content: center; font-size: 14px; color: black; <?= isset($_GET['only_excluded']) ? 'transform: translateX(20px);' : '' ?>">
+        <?= isset($_GET['only_excluded']) ? '✓' : '' ?>
+      </span></span>Only Show Purge Excluded</label>
    </form>
 </div>
 <?php
