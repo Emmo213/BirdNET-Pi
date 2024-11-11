@@ -91,7 +91,7 @@ if (get_included_files()[0] === __FILE__) {
 <table>
   <?php
   $birds = array();
-  $confidence = array();
+  $values = array();
 
   while($results=$result2->fetchArray(SQLITE3_ASSOC))
   {
@@ -100,7 +100,14 @@ if (get_included_files()[0] === __FILE__) {
     $filename = "/By_Date/".$results['Date']."/".$comname."/".$results['File_Name'];
     $birds[] = $results['Com_Name'];
     if ($_GET['sort'] == "confidence") {
-        $confidence[] = ' (' . round($results['MAX(Confidence)'] * 100) . '%)';
+        $values[] = ' (' . round($results['MAX(Confidence)'] * 100) . '%)';
+    } elseif ($_GET['sort'] == "occurrences") {
+        $valuescount = $results['COUNT(*)'];
+        if ($valuescount >= 1000) {
+            $values[] = ' (' . round($valuescount / 1000, 1) . 'k)';
+        } else {
+            $values[] = ' (' . $valuescount . ')';
+        }
     }
   }
 
@@ -121,7 +128,7 @@ if (get_included_files()[0] === __FILE__) {
       if ($index < count($birds)) {
         ?>
         <td>
-            <button type="submit" name="species" value="<?php echo $birds[$index];?>"><?php echo $birds[$index].$confidence[$index];?></button>
+            <button type="submit" name="species" value="<?php echo $birds[$index];?>"><?php echo $birds[$index].$values[$index];?></button>
         </td>
         <?php
       } else {
